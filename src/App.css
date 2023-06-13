@@ -21,6 +21,9 @@ button + button {
 button:hover {
   cursor: pointer;
 }
+button:disabled {
+  background-color: #b6b6b6;
+}
 
 a,
 a:visited,

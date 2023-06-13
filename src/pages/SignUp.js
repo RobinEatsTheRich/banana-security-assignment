@@ -1,30 +1,31 @@
 import React, {useContext} from 'react';
+import axios from "axios";
 import {useForm} from 'react-hook-form';
 import {Link} from 'react-router-dom';
 import {AuthContext} from "../context/AuthProvider";
 
 function SignUp() {
     const {login} = useContext(AuthContext)
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, watch} = useForm();
+    const watchEmail = watch('email');
+    const watchUsername = watch('username');
+    const watchPassword = watch('password');
 
-    async function register(data) {
+    async function registerAccount(data) {
         try {
-            const result = await axios.post('http://localhost:3000', {
+            const result = await axios.post('http://localhost:3000/register', {
                 username: data.username,
                 email: data.email,
                 password: data.password,
-            }, {});
+            });
             console.log(result)
-            login(data.email, data.username, data.password)
+            //login(data.email, data.username, data.password)
         }catch (e) {
             console.log(e)
 
         }
     }
 
-    function onFormSubmit(data) {
-        register(data)
-    }
 
     return (
         <>
@@ -36,7 +37,7 @@ function SignUp() {
                 doloremque ea eveniet facere fuga illum in numquam quia reiciendis rem sequi tenetur veniam?</p>
 
 
-            <form onSubmit={handleSubmit(onFormSubmit)}>
+            <form onSubmit={handleSubmit(registerAccount)}>
                 <label htmlFor="emailInput">Email-adres</label>
                 <input
                     type="text"
@@ -57,6 +58,7 @@ function SignUp() {
                 />
                 <button
                     type="submit"
+                    disabled={!watchPassword || !watchEmail || !watchUsername}
                 >Inloggen</button>
             </form>
 

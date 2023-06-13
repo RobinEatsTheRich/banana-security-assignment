@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react';
 import { useNavigate  } from 'react-router-dom';
+import jwtDecode from "jwt-decode";
 
 export const AuthContext = createContext(null);
 
@@ -9,30 +10,33 @@ function AuthContextProvider({ children }) {
         auth: false,
         user:{
             email: '',
-            username: '',
-            password: ''
+            id: ''
         }})
     const navigate = useNavigate();
 
-    function login( email, username, password){
+    function login( token ){
+        localStorage.setItem('token', token);
+        const decodedToken = jwtDecode(token)
+
         setIsAuth({
             auth: true,
             user:{
-                email: email,
-                username: username,
-                password: password
+                email: decodedToken.email,
+                id: decodedToken.sub
             }})
         console.log(`gebruiker is ingelogd! als:`)
         console.log(isAuth.user)
         navigate('/profile')
     }
+
+
     function logout(){
+        localStorage.removeItem('token');
         setIsAuth({
             auth: false,
             user:{
                 email: '',
-                username: '',
-                password: ''
+                id: ''
             }})
         console.log("gebruiker is uitgelogd!")
         navigate('/')
