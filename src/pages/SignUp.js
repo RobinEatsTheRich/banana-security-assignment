@@ -4,11 +4,26 @@ import {Link} from 'react-router-dom';
 import {AuthContext} from "../context/AuthProvider";
 
 function SignUp() {
-    const {login, isAuth} = useContext(AuthContext)
+    const {login} = useContext(AuthContext)
     const {register, handleSubmit} = useForm();
 
+    async function register(data) {
+        try {
+            const result = await axios.post('http://localhost:3000', {
+                username: data.username,
+                email: data.email,
+                password: data.password,
+            }, {});
+            console.log(result)
+            login(data.email, data.username, data.password)
+        }catch (e) {
+            console.log(e)
+
+        }
+    }
+
     function onFormSubmit(data) {
-        login(data.email, data.username, data.password)
+        register(data)
     }
 
     return (
